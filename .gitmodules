@@ -1,0 +1,4 @@
+[submodule "external/libSMCE"]
+	path = external/libSMCE
+	url = https://github.com/ItJustWorksTM/libSMCE
+	branch = master
