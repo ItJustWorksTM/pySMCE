@@ -20,6 +20,7 @@ jobs:
           submodules: true
       - name: Cache Boost
         id: cache-boost
+        if: matrix.os == 'ubuntu-latest'
         uses: actions/cache@v2
         with:
           path: boost_root
