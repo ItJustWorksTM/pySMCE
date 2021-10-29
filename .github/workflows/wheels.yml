@@ -11,6 +11,10 @@ jobs:
     env:
       CIBW_ARCHS: "auto64"
       CIBW_ARCHS_MACOS: "x86_64 universal2 arm64"
+      CIBW_BEFORE_ALL_LINUX: >
+        yum install -y openssl-static ||
+        apt-get install -y libssl-dev ||
+        apk -U add openssl-libs-static
       CIBW_MANYLINUX_X86_64_IMAGE: "manylinux2014"
       CIBW_TEST_COMMAND: "pytest {package}"
       CIBW_TEST_SKIP: "*-macosx_arm64 *-macosx_universal2:arm64"
