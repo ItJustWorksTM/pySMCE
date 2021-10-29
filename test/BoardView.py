@@ -16,15 +16,16 @@
 #
 
 from pySMCE import smce
-
 from defs import *
+
+from os import path
 from time import sleep
 
 
 def test_boardview_gpio(smce_root):
     tc = smce.Toolchain(smce_root)
     tc.check_suitable_environment()
-    sk = smce.Sketch(SKETCHES_PATH + "pins", smce.SketchConfig(fqbn='arduino:avr:nano'))
+    sk = smce.Sketch(path.join(SKETCHES_PATH, 'pins'), smce.SketchConfig(fqbn='arduino:avr:nano'))
     tc.compile(sk)
     br = smce.Board()
     assert br.configure(smce.BoardConfig(

@@ -25,18 +25,18 @@ from zipfile import ZipFile
 
 @pytest.fixture
 def smce_root():
-    testdir_root = path.realpath(path.dirname(path.abspath(__file__)) + '/../.pySMCE-testdir')
+    testdir_root = path.realpath(path.join(path.dirname(path.abspath(__file__)), '..', '.pySMCE-testdir'))
     makedirs(testdir_root, exist_ok=True)
     ZipFile(resources_archive_path).extractall(testdir_root)
     return testdir_root
 
 
-SMCE_TEST_SOURCES = path.realpath(path.dirname(path.abspath(__file__)) + '/../external/libSMCE/test')
-SKETCHES_PATH = SMCE_TEST_SOURCES + '/sketches/'
-PLUGINS_PATH = SMCE_TEST_SOURCES + '/plugins/'
-PATCHES_PATH = SMCE_TEST_SOURCES + '/patches/'
-STORAGE_PATH = SMCE_TEST_SOURCES + '/storage/'
-MANIFESTS_PATH = SMCE_TEST_SOURCES + '/manifests/'
+SMCE_TEST_SOURCES = path.realpath(path.join(path.dirname(path.abspath(__file__)), '..', 'external', 'libSMCE', 'test'))
+SKETCHES_PATH = path.join(SMCE_TEST_SOURCES, 'sketches')
+PLUGINS_PATH = path.join(SMCE_TEST_SOURCES, 'plugins')
+PATCHES_PATH = path.join(SMCE_TEST_SOURCES, 'patches')
+STORAGE_PATH = path.join(SMCE_TEST_SOURCES, 'storage')
+MANIFESTS_PATH = path.join(SMCE_TEST_SOURCES, 'manifests')
 
 
 def assert_pin_delayable(pin, expected_value, ticks, tick_ms=1):

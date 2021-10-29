@@ -20,12 +20,13 @@ from defs import *
 
 from asyncio import create_task, sleep, wait_for
 from asyncio.futures import Future
+from os import path
 
 
 def test_board_contracts(smce_root):
     tc = smce.Toolchain(smce_root)
     tc.check_suitable_environment()
-    sk = smce.Sketch(SKETCHES_PATH + "noop", smce.SketchConfig(fqbn='arduino:avr:nano'))
+    sk = smce.Sketch(path.join(SKETCHES_PATH, 'noop'), smce.SketchConfig(fqbn='arduino:avr:nano'))
     tc.compile(sk)
     assert sk.is_compiled
     br = smce.Board()
@@ -60,7 +61,7 @@ def test_board_contracts(smce_root):
 async def test_board_exit_notify(smce_root):
     tc = smce.Toolchain(smce_root)
     tc.check_suitable_environment()
-    sk = smce.Sketch(SKETCHES_PATH + "uncaught", smce.SketchConfig(fqbn='arduino:avr:nano'))
+    sk = smce.Sketch(path.join(SKETCHES_PATH, 'uncaught'), smce.SketchConfig(fqbn='arduino:avr:nano'))
     tc.compile(sk)
     ex = Future()
 
@@ -84,5 +85,5 @@ async def test_board_exit_notify(smce_root):
 def test_mixed_inocxx_sources(smce_root):
     tc = smce.Toolchain(smce_root)
     tc.check_suitable_environment()
-    sk = smce.Sketch(SKETCHES_PATH + "with_cxx", smce.SketchConfig(fqbn='arduino:avr:nano'))
+    sk = smce.Sketch(path.join(SKETCHES_PATH, 'with_cxx'), smce.SketchConfig(fqbn='arduino:avr:nano'))
     tc.compile(sk)

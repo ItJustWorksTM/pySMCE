@@ -19,16 +19,16 @@ from pySMCE import smce
 from defs import *
 
 import pytest
-from os import makedirs
+from os import makedirs, path
 
 
 def test_toolchain_invalid(smce_root):
-    path = smce_root + "/tmp/empty_dir"
-    makedirs(path, exist_ok=True)
-    tc = smce.Toolchain(path)
+    empty_dir = path.join(smce_root, 'tmp', 'empty_dir')
+    makedirs(empty_dir, exist_ok=True)
+    tc = smce.Toolchain(empty_dir)
     with pytest.raises(SystemError):
         tc.check_suitable_environment()
-    assert tc.resource_dir == path
+    assert tc.resource_dir == empty_dir
 
 
 def test_toolchain_valid(smce_root):
