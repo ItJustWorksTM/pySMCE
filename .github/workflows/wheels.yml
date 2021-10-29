@@ -7,11 +7,10 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [macOS-latest, windows-latest] # add ubuntu-latest back once we get a portable Clang or fix building with GCC
+        os: [ubuntu-latest, macOS-latest, windows-latest]
     env:
       CIBW_ARCHS: "auto64"
       CIBW_ARCHS_MACOS: "x86_64 universal2 arm64"
-      CIBW_ENVIRONMENT_LINUX: "CC=clang CXX=clang++"
       CIBW_MANYLINUX_X86_64_IMAGE: "manylinux2014"
       CIBW_TEST_COMMAND: "pytest {package}"
       CIBW_TEST_SKIP: "*-macosx_arm64 *-macosx_universal2:arm64"
@@ -27,9 +26,6 @@ jobs:
           key: ${{ runner.os }}-boost-1.74.0-pic
       - name: Install Boost
         if: steps.cache-boost.outputs.cache-hit != 'true' && matrix.os == 'ubuntu-latest'
-        env:
-          CC: clang
-          CXX: clang++
         run: external/libSMCE/ci/build-static-boost.sh 1.74.0
       - name: Install deps
         if: matrix.os == 'macOS-latest'
