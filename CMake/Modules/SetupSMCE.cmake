@@ -20,7 +20,7 @@ include_guard ()
 include (FetchContent)
 FetchContent_Declare (libsmce
     GIT_REPOSITORY "https://github.com/ItJustWorksTM/libSMCE"
-    GIT_TAG pysmce
+    GIT_TAG master
     GIT_SHALLOW On
 )
 FetchContent_GetProperties (libsmce)
