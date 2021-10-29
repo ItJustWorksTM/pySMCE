@@ -7,7 +7,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [ubuntu-latest, macOS-latest, windows-latest]
+        os: [macOS-latest, windows-latest] # add ubuntu-latest back once we get a portable Clang or fix building with GCC
     env:
       CIBW_ARCHS: "auto64"
       CIBW_ARCHS_MACOS: "x86_64 universal2 arm64"
