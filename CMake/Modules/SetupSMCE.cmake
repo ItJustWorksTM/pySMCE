@@ -31,6 +31,7 @@ if (NOT libsmce_POPULATED)
   string (REPLACE "add_dependencies (SMCE ArdRtRes)" "add_dependencies (SMCE_static ArdRtRes)" libsmce_cmakelists "${libsmce_cmakelists}")
   file (WRITE "${libsmce_SOURCE_DIR}/CMakeLists.txt" "${libsmce_cmakelists}")
 
+  set (BOOST_ENABLE_PYTHON On)
   set (SMCE_BUILD_SHARED Off CACHE INTERNAL "")
   set (SMCE_BUILD_STATIC On CACHE INTERNAL "")
   set (SMCE_CXXRT_LINKING "STATIC" CACHE INTERNAL "")
