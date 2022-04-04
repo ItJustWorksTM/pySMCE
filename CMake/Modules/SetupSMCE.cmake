@@ -20,7 +20,7 @@ include_guard ()
 include (FetchContent)
 FetchContent_Declare (libsmce
     GIT_REPOSITORY "https://github.com/ItJustWorksTM/libSMCE"
-    GIT_TAG master
+    GIT_TAG v1.5.5
     GIT_SHALLOW On
 )
 FetchContent_GetProperties (libsmce)
@@ -29,12 +29,23 @@ if (NOT libsmce_POPULATED)
 
   file (READ "${libsmce_SOURCE_DIR}/CMakeLists.txt" libsmce_cmakelists)
   string (REPLACE "add_dependencies (SMCE ArdRtRes)" "add_dependencies (SMCE_static ArdRtRes)" libsmce_cmakelists "${libsmce_cmakelists}")
+  string (REPLACE "Python_" "Python3_" libsmce_cmakelists "${libsmce_cmakelists}")
+  string (REPLACE "Python::" "Python3::" libsmce_cmakelists "${libsmce_cmakelists}")
   file (WRITE "${libsmce_SOURCE_DIR}/CMakeLists.txt" "${libsmce_cmakelists}")
 
-  set (BOOST_ENABLE_PYTHON On)
+  set (BOOST_ENABLE_PYTHON Off)
   set (SMCE_BUILD_SHARED Off CACHE INTERNAL "")
   set (SMCE_BUILD_STATIC On CACHE INTERNAL "")
   set (SMCE_CXXRT_LINKING "STATIC" CACHE INTERNAL "")
-  set (SMCE_BOOST_LINKING "${PYSMCE_BOOST_LINKING}" CACHE INTERNAL "")
   add_subdirectory ("${libsmce_SOURCE_DIR}" "${libsmce_BINARY_DIR}" EXCLUDE_FROM_ALL)
+
+
+  set (BOOST_ENABLE_PYTHON On)
+  set (boost_SOURCE_DIR "${PROJECT_BINARY_DIR}/_deps/boost-src")
+  set (boost_BINARY_DIR "${PROJECT_BINARY_DIR}/_deps/boost-build")
+  file (READ "${boost_SOURCE_DIR}/libs/python/CMakeLists.txt" bpy_cmakelists)
+  string (REPLACE "Development " "Development.Module " bpy_cmakelists "${bpy_cmakelists}")
+  string (REPLACE "PUBLIC include" "PUBLIC ${boost_SOURCE_DIR}" bpy_cmakelists "${bpy_cmakelists}")
+  file (WRITE "${boost_SOURCE_DIR}/libs/python/CMakeLists.txt" "${bpy_cmakelists}")
+  add_subdirectory ("${boost_SOURCE_DIR}/libs/python" "${boost_BINARY_DIR}/libs/python" EXCLUDE_FROM_ALL)
 endif ()

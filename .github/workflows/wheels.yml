@@ -16,7 +16,8 @@ jobs:
         apt-get install -y libssl-dev ||
         apk -U add openssl-libs-static
       CIBW_MANYLINUX_X86_64_IMAGE: "manylinux2014"
-      CIBW_TEST_COMMAND: "pytest {package}"
+      CIBW_TEST_REQUIRES: "pytest pytest-asyncio"
+      CIBW_TEST_COMMAND: "pytest {project}/test"
       CIBW_TEST_SKIP: "*-macosx_arm64 *-macosx_universal2:arm64"
     steps:
       - uses: actions/checkout@v2
@@ -25,17 +26,14 @@ jobs:
       - name: Install deps
         if: matrix.os == 'macOS-latest'
         run: |
-          brew install boost openssl
-          echo 'export PATH="/usr/local/opt/openssl@3/bin:$PATH"' >> /Users/runner/.bash_profile
-          echo 'export LDFLAGS="-L/usr/local/opt/openssl@3/lib"' >> /Users/runner/.bash_profile
-          echo 'export CPPFLAGS="-I/usr/local/opt/openssl@3/include"' >> /Users/runner/.bash_profile
-          echo 'export PKG_CONFIG_PATH="/usr/local/opt/openssl@3/lib/pkgconfig"' >> /Users/runner/.bash_profile
+          brew install openssl@3
+          curl -sL https://github.com/AeroStun/brew-lipo/raw/master/brew-lipo.sh | bash -s openssl@3
+          echo "export OPENSSL_ROOT_DIR=\"$(brew --prefix openssl@3)\"" >> /Users/runner/.bash_profile
       - name: Install deps
         if: matrix.os == 'windows-latest'
         shell: powershell
         run: |
           choco install openssl
-          external\libSMCE\ci\install-boost.ps1 '14.2' '1.77.0' '1_77_0'
       - uses: actions/setup-python@v2
       - name: Install cibuildwheel
         run: python -m pip install cibuildwheel

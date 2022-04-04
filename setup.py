@@ -13,12 +13,12 @@ except SKBuildError:
 
 setup(
     name='pySMCE',
-    version='1.4.0',
+    version='1.5.4',
     description='Python binding for libSMCE',
     author='ItJustWorks™',
     license="Apache-2.0",
     url='https://github.com/ItJustWorksTM/pySMCE',
     tests_require=['pytest', 'pytest-asyncio'],
     setup_requires=setup_requires,
-    cmake_args=['-DPYSMCE_BOOST_LINKING=STATIC']
+    cmake_args=[]
 )

@@ -15,14 +15,12 @@
 #  limitations under the License.
 #
 
-cmake_minimum_required (VERSION 3.16)
+cmake_minimum_required (VERSION 3.18)
 cmake_policy (SET CMP0022 NEW)
 set (CMAKE_POLICY_DEFAULT_CMP0069 NEW) # mosquitto's CMakeLists does not behave otherwise
 
-set (PYSMCE_BOOST_LINKING "STATIC" CACHE STRING "")
-
 project (pySMCE
-    VERSION 1.4.0.5
+    VERSION 1.5.4.5
     HOMEPAGE_URL "https://github.com/ItJustWorksTM/pySMCE"
     LANGUAGES CXX
 )
@@ -41,6 +39,14 @@ else ()
   message (WARNING "IPO is not supported: ${ipo_output}")
 endif ()
 
+# Currently, scikit-build does not support FindPython.
+if (SKBUILD)
+  message (STATUS "Using SciKit Build")
+  set (Python_EXECUTABLE "${PYTHON_EXECUTABLE}" CACHE INTERNAL "")
+  set (Python_INCLUDE_DIR "${PYTHON_INCLUDE_DIR}" CACHE INTERNAL "")
+  set (Python_LIBRARY "${PYTHON_LIBRARY}" CACHE INTERNAL "")
+endif ()
+
 include (SetupSMCE)
 
 set (CMAKE_CXX_STANDARD 20)
@@ -52,12 +58,10 @@ if (NOT TARGET Boost::python)
   find_package (Boost 1.74 COMPONENTS python REQUIRED)
 endif ()
 
-find_package (Python REQUIRED COMPONENTS Development)
-add_library (python-dev INTERFACE)
-target_include_directories (python-dev INTERFACE "${Python_INCLUDE_DIRS}")
+find_package (Python REQUIRED COMPONENTS Development.Module)
 
 add_library (pySMCE MODULE)
-target_link_libraries (pySMCE PRIVATE SMCE_static python-dev Boost::python)
+target_link_libraries (pySMCE PRIVATE SMCE_static Python::Module Boost::python)
 set_target_properties (pySMCE PROPERTIES
     PREFIX ""
     OUTPUT_NAME "smce"
@@ -80,7 +84,7 @@ target_sources (pySMCE PRIVATE
     src/Toolchain.cpp
 )
 if (NOT MSVC)
-  target_compile_options (pySMCE PRIVATE "-Wall" "-Wextra" "-Wpedantic" "-Werror" "-Wcast-align" "-Wno-missing-field-initializers")
+  target_compile_options (pySMCE PRIVATE "-Wall" "-Wextra" "-Wpedantic" "-Werror" "-Wcast-align" "-Wno-missing-field-initializers" "-Wno-unused-parameter")
 else ()
   target_compile_options (pySMCE PRIVATE "/W4" "/permissive-" "/wd4244" "/wd4251" "/wd4459" "/WX")
 endif ()
